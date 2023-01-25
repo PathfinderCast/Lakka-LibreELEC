@@ -146,9 +146,9 @@
 # Windowmanager to use (fluxbox / none)
   WINDOWMANAGER="none"
 
-# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia)
+# Xorg Graphic drivers to use (all / i915,r300,r600,nvidia)
 # Space separated list is supported,
-# e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeonsi nvidia"
+# e.g. GRAPHIC_DRIVERS="i915 r300 r600 radeonsi nvidia"
   GRAPHIC_DRIVERS="crocus r300 r600 radeonsi iris i915 nouveau"
 
 # build and install Joystick support (yes / no)
@@ -223,6 +223,7 @@
                   easyrpg \
                   emux_sms\
                   ecwolf \
+                  fake_08 \
                   fbalpha2012 \
                   fbneo \
                   fceumm \
@@ -253,6 +254,7 @@
                   mesen \
                   mesen_s \
                   mgba \
+                  mojozork \
                   mrboom \
                   mu \
                   mupen64plus_next \
@@ -480,8 +482,14 @@
   elif [ "${PROJECT}" = "Amlogic" -o "${PROJECT}" = "Rockchip" -o "${PROJECT}" = "Allwinner" ]; then
     EXCLUDE_LIBRETRO_CORES+=" yabasanshiro"
   elif [ "${PROJECT}" = "Generic" -a "${ARCH}" = "i386" ]; then
-    EXCLUDE_LIBRETRO_CORES+=" lr_moonlight openlara"
-  elif [ "${OPENGLES_SUPPORT}" = "yes" ]; then
+    EXCLUDE_LIBRETRO_CORES+=" fake_08 lr_moonlight openlara"
+  elif [ "${PROJECT}" = "Ayn" -a "${DEVICE}" = "Odin" ]; then
+    EXCLUDE_LIBRETRO_CORES+=" same_cdi lr_moonlight kronos"
+  elif [ "${PROJECT}" = "L4T" -a "${DEVICE}" = "Switch" ]; then
+    EXCLUDE_LIBRETRO_CORES+=" kronos"
+  fi
+
+  if [ "${OPENGLES_SUPPORT}" = "yes" ]; then
     #Core doesnt work with OPENGLES builds, as nanogui doesnt have support for that
     #Mental note fix OPENGLES in moonlight core gui/renderer.
     EXCLUDE_LIBRETRO_CORES+=" lr_moonlight"
@@ -510,3 +518,4 @@
   if [ -n "${CUSTOM_LIBRETRO_CORES}" ]; then
     LIBRETRO_CORES="${CUSTOM_LIBRETRO_CORES}"
   fi
+

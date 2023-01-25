@@ -77,7 +77,7 @@ if [ "${LIBREELEC_VERSION}" = "devel" ]; then
 fi
 
 # Get origin url, fix git:// and git@github.com: urls if necessary
-ORIGIN_URL="$(git remote -v | awk '$1 == "origin" { print $2 }' | head -1 | sed 's#\.git$##;s#^git:#https:#;s#^git@github\.com:#https://github.com/#')"
+ORIGIN_URL="$(git remote -v | awk '$1 == "origin" { print $2 }' | head -1 | sed -e 's#\.git$##' -e 's#^git:#https:#' -e 's#^git@github\.com:#https://github.com/#' -e 's#://.*@#://#')"
 
 [ "${BUILDER_NAME,,}" = "official" ] && BUILDER_NAME=
 if [ "${OFFICIAL}" = "yes" ]; then
@@ -224,13 +224,32 @@ for MOD in $(find ${INSTALL}/usr/lib/kernel-overlays/ -type f -name *.ko); do
   ${TARGET_KERNEL_PREFIX}strip --strip-debug ${MOD}
 done
 
-if [ "${BOOTLOADER}" = "switch-bootloader" ]; then
+if [ "${BOOTLOADER}" = "switch-bootloader" -o "${BOOTLOADER}" = "odin-bootloader" ]; then
   mv ${INSTALL}/usr/lib/kernel-overlays/base/lib/modules ${INSTALL}/usr/lib/
-  mv ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware/brcm/* ${INSTALL}/usr/lib/firmware/brcm/
-  rm -r ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware/brcm
+  if [ "${BOOTLOADER}" = "switch-bootloader" ]; then
+    mv ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware/brcm/* ${INSTALL}/usr/lib/firmware/brcm/
+    rm -r ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware/brcm
+  fi
+  if [ ! -d ${INSTALL}/usr/lib/firmware ]; then
+    mkdir -p ${INSTALL}/usr/lib/firmware
+  fi
   mv ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware/* ${INSTALL}/usr/lib/firmware/
   rm -r ${INSTALL}/usr/lib/kernel-overlays/base/lib/firmware
-  cp -PR ${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/firmwares/files/* ${INSTALL}/usr/lib/firmware/
+  if [ -d ${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/firmwares/files ]; then
+    cp -PR ${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/firmwares/files/* ${INSTALL}/usr/lib/firmware/
+  fi
+
+  BOOTLOADER_DIR="$(get_pkg_directory "${BOOTLOADER}")"
+  if find_file_path bootloader/tools/mkdtboimg.py ${BOOTLOADER_DIR}/tools/mkdtboimg.py; then
+    echo Creating DTimg....
+    ${FOUND_PATH} create "${INSTALL}"/usr/share/bootloader/boot/nx-plat.dtimg --page_size=1000 \
+      "${INSTALL}"/usr/share/bootloader/boot/tegra210-odin.dtb --id=0x4F44494E \
+      "${INSTALL}"/usr/share/bootloader/boot/tegra210b01-odin.dtb --id=0x4F44494E --rev=0x00000b01 \
+      "${INSTALL}"/usr/share/bootloader/boot/tegra210b01-vali.dtb --id=0x56414C49 \
+      "${INSTALL}"/usr/share/bootloader/boot/tegra210b01-frig.dtb --id=0x46524947
+    rm "${INSTALL}"/usr/share/bootloader/boot/*.dtb
+    echo Done!
+  fi
 else
   # Symlink overlayed modules to /usr/lib/modules
   ln -sT /run/kernel-overlays/modules ${INSTALL}/usr/lib/modules
@@ -245,6 +264,15 @@ rm -rf ${TARGET_IMG}/${IMAGE_NAME}.kernel
 
 # Copy kernel to target dir
 cp -PR $(get_install_dir linux)/.image/${KERNEL_TARGET} ${TARGET_IMG}/${IMAGE_NAME}.kernel
+
+if [ "${BOOTLOADER}" = "switch-bootloader" ]; then
+  echo Compress Kernel and create uimage....
+  gzip ${TARGET_IMG}/${IMAGE_NAME}.kernel
+  ${TOOLCHAIN}/bin/mkimage -A arm64 -O linux -T kernel -C gzip -a 0x80200000 -e 0x80200000 -n CTCKRN-5.0.0 -d ${TARGET_IMG}/${IMAGE_NAME}.kernel.gz \
+    ${TARGET_IMG}/${IMAGE_NAME}.kernel
+  rm ${TARGET_IMG}/${IMAGE_NAME}.kernel.gz
+  echo Done!
+fi
 chmod 0644 ${TARGET_IMG}/${IMAGE_NAME}.kernel
 
 # Set mksquashfs options for each compression method
@@ -317,7 +345,7 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
     md5sum -t target/KERNEL > target/KERNEL.md5;
   )
 
-  if [ "${BOOTLOADER}" = "switch-bootloader" ]; then
+  if [ "${BOOTLOADER}" = "switch-bootloader" -o "${BOOTLOADER}" = "odin-bootloader" ]; then
     if [ "${DISTRO}" = "Lakka" ]; then
       DISTRO_PATH="lakka"
     elif [ "${DISTRO}" = "LibreELEC" ]; then
@@ -330,7 +358,11 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
     echo "${TARGET_VERSION}" > ${RELEASE_DIR}/${DISTRO_PATH}/RELEASE
     mkdir -p $RELEASE_DIR/${DISTRO_PATH}/licenses
     cp ${ROOT}/licenses/* ${RELEASE_DIR}/${DISTRO_PATH}/licenses
-    cp -r ${RELEASE_DIR}/${DISTRO_PATH}/boot/* ${RELEASE_DIR}/${DISTRO_PATH}/
+    if [ "${BOOTLOADER}" = "odin-bootloader" ]; then
+      cp -r ${RELEASE_DIR}/${DISTRO_PATH}/boot2/* ${RELEASE_DIR}/${DISTRO_PATH}/
+    else
+      mv ${RELEASE_DIR}/${DISTRO_PATH}/boot/nx-plat.dtimg ${RELEASE_DIR}/${DISTRO_PATH}/
+    fi
     mkdir -p ${RELEASE_DIR}/${DISTRO_PATH}/storage
     cp ${TARGET_IMG}/${IMAGE_NAME}.system ${RELEASE_DIR}/${DISTRO_PATH}/SYSTEM
     cp ${TARGET_IMG}/${IMAGE_NAME}.kernel ${RELEASE_DIR}/${DISTRO_PATH}/KERNEL
@@ -344,7 +376,16 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
     rm -rf ${RELEASE_DIR}/RELEASE
     rm -rf ${RELEASE_DIR}/CHANGELOG
     rm -rf ${RELEASE_DIR}/README.md
-    rm -rf ${RELEASE_DIR}/${DISTRO_PATH}/boot
+    if [ "${BOOTLOADER}" = "odin-bootloader" ]; then
+      if [ -d ${RELEASE_DIR}/${DISTRO_PATH}/boot ]; then
+        rm -rf ${RELEASE_DIR}/${DISTRO_PATH}/boot
+      fi
+      rm -rf ${RELEASE_DIR}/${DISTRO_PATH}/boot2
+      rm -rf ${RELEASE_DIR}/${DISTRO_PATH}/EFI
+      mv ${RELEASE_DIR}/boot ${RELEASE_DIR}/boot2
+      mv ${RELEASE_DIR}/boot2/* ${RELEASE_DIR}
+      rm -rf ${RELEASE_DIR}/boot2
+    fi
   fi
 
   # Create target directory
@@ -361,7 +402,7 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
     sha256sum ${IMAGE_NAME}.tar > ${IMAGE_NAME}.tar.sha256
   )
 
-  if  [ "${BOOTLOADER}" = "switch-bootloader" ]; then
+  if  [ "${BOOTLOADER}" = "switch-bootloader" -o "${BOOTLOADER}" = "odin-bootloader" ]; then
     rm -rf ${RELEASE_DIR}
     exit 0
   fi

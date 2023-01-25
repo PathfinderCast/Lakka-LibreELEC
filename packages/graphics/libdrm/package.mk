@@ -25,10 +25,10 @@ PKG_MESON_OPTS_TARGET="-Dlibkms=false \
                        -Dinstall-test-programs=false \
                        -Dudev=false"
 
-listcontains "${GRAPHIC_DRIVERS}" "(crocus|iris|i915|i965)" &&
+listcontains "${GRAPHIC_DRIVERS}" "(crocus|iris|i915)" &&
   PKG_MESON_OPTS_TARGET+=" -Dintel=true" || PKG_MESON_OPTS_TARGET+=" -Dintel=false"
 
-listcontains "${GRAPHIC_DRIVERS}" "(r200|r300|r600|radeonsi)" &&
+listcontains "${GRAPHIC_DRIVERS}" "(r300|r600|radeonsi)" &&
   PKG_MESON_OPTS_TARGET+=" -Dradeon=true" || PKG_MESON_OPTS_TARGET+=" -Dradeon=false"
 
 listcontains "${GRAPHIC_DRIVERS}" "radeonsi" &&
@@ -48,6 +48,9 @@ listcontains "${GRAPHIC_DRIVERS}" "etnaviv" &&
 
 listcontains "${GRAPHIC_DRIVERS}" "nouveau" &&
   PKG_MESON_OPTS_TARGET+=" -Dnouveau=true" || PKG_MESON_OPTS_TARGET+=" -Dnouveau=false"
+
+listcontains "${GRAPHIC_DRIVERS}" "freedreno" &&
+  PKG_MESON_OPTS_TARGET+=" -Dfreedreno=true" || PKG_MESON_OPTS_TARGET+=" -Dfreedreno=false"
 
 if [ "${DISTRO}" = "Lakka" ]; then
   PKG_MESON_OPTS_TARGET="${PKG_MESON_OPTS_TARGET//-Dlibkms=false/-Dlibkms=true}"
