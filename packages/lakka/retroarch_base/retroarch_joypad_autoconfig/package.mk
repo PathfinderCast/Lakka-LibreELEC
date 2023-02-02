@@ -11,7 +11,7 @@ makeinstall_target() {
   make -C ${PKG_BUILD} install INSTALLDIR="${INSTALL}/etc/retroarch-joypad-autoconfig" DOC_DIR="${INSTALL}/etc/doc/."
 
   #Remove non tested joycon configs
-  rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Nintendo*.cf
+  rm -f "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Nintendo*.cfg
 
   #remove conflicting joypads configs
   rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Hyperkin_Genesis_6_Button.cfg
