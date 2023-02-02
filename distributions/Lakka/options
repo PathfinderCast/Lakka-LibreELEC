@@ -360,8 +360,10 @@
                   desmume \
                   desmume_2015 \
                   dinothawr \
+                  dirksimple \
                   dolphin \
                   dosbox \
+                  dosbox_core \
                   dosbox_pure \
                   dosbox_svn \
                   easyrpg \
@@ -385,6 +387,7 @@
                   hatari \
                   higan_sfc \
                   higan_sfc_balanced \
+                  jaxe \
                   jumpnbump \
                   kronos \
                   lowres_nx \
@@ -406,6 +409,7 @@
                   neocd \
                   nestopia \
                   np2kai \
+                  numero \
                   nxengine \
                   o2em \
                   openlara \
@@ -439,6 +443,7 @@
                   superbroswar \
                   tgbdual \
                   theodore \
+                  thepowdertoy \
                   tic80 \
                   tyrquake \
                   uae4arm \
