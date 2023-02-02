@@ -216,8 +216,10 @@
                   desmume \
                   desmume_2015 \
                   dinothawr \
+                  dirksimple \
                   dolphin \
                   dosbox \
+                  dosbox_core \
                   dosbox_pure \
                   dosbox_svn \
                   duckstation \
@@ -245,6 +247,7 @@
                   hatari \
                   higan_sfc \
                   higan_sfc_balanced \
+                  jaxe \
                   jumpnbump \
                   kronos \
                   lowres_nx \
@@ -267,6 +270,7 @@
                   neocd \
                   nestopia \
                   np2kai \
+                  numero \
                   nxengine \
                   o2em \
                   openlara \
@@ -305,6 +309,7 @@
                   swanstation \
                   tgbdual \
                   theodore \
+                  thepowdertoy \
                   tic80 \
                   tyrquake \
                   uae4arm \
@@ -465,6 +470,7 @@
                                desmume_2015 \
                                dolphin \
                                dosbox \
+                               dosbox_core \
                                dosbox_pure \
                                dosbox_svn \
                                fbneo \
@@ -509,7 +515,7 @@
   elif [ "${PROJECT}" = "Generic" -a "${ARCH}" = "i386" ]; then
     EXCLUDE_LIBRETRO_CORES+=" fake_08 lr_moonlight openlara"
   elif [ "${PROJECT}" = "Ayn" -a "${DEVICE}" = "Odin" ]; then
-    EXCLUDE_LIBRETRO_CORES+=" same_cdi lr_moonlight kronos"
+    EXCLUDE_LIBRETRO_CORES+=" lr_moonlight"
   elif [ "${PROJECT}" = "L4T" -a "${DEVICE}" = "Switch" ]; then
     EXCLUDE_LIBRETRO_CORES+=" kronos"
   fi
