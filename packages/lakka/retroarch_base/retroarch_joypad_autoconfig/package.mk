@@ -17,6 +17,7 @@ makeinstall_target() {
   rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Hyperkin_Genesis_6_Button.cfg
   rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Retro-Bit_Genesis_Saturn_8_Button_Arcade_Pad.cfg
   rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Retrolink_Sega_Saturn_USB_GamePad.cfg
+  rm "${INSTALL}"/etc/retroarch-joypad-autoconfig/udev/Retrolink_N64_USB_controller.cfg
 
   #Place Working configs
   cp -Pr "${PKG_DIR}"/joypad_configs/* "${INSTALL}"/etc/retroarch-joypad-autoconfig/
