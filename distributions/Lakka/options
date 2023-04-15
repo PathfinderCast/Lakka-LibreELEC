@@ -328,7 +328,7 @@
                  "
 
 # disable some cores
-  if [ "${PROJECT}" = "RPi" ]; then
+  if [ "${PROJECT}" = "RPi" -o "${PROJECT}" = "Amlogic" ]; then
     EXCLUDE_LIBRETRO_CORES+=" \
                   2048 \
                   81 \
@@ -378,7 +378,6 @@
                   freechaf \
                   freeintv \
                   fuse_libretro \
-                  gambatte \
                   gearboy \
                   gearsystem \
                   genesis_plus_gx_wide \
