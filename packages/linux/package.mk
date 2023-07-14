@@ -16,14 +16,14 @@ PKG_PATCH_DIRS="${LINUX}"
 
 case "${LINUX}" in
   amlogic)
-    PKG_VERSION="6449a0ba6843fe70523eeb7855984054f36f6d24" # 6.1.19
-    PKG_SHA256="6a46c7b91028157d56437736cc8601fa46485e6f52bd6983e92ff80f17aa3065"
+    PKG_VERSION="ef8aed2fffe03c394547dde0cf3590f98555827f" # 5.11.22
+    PKG_SHA256="a5b9cb9555c52879b5576601db00a6a91ff6d5a20cc11e01be7a0eaef02a2608"
     PKG_URL="https://github.com/torvalds/linux/archive/${PKG_VERSION}.tar.gz"
     PKG_SOURCE_NAME="linux-${LINUX}-${PKG_VERSION}.tar.gz"
     ;;
   raspberrypi)
-    PKG_VERSION="a72a720bfd4d2093ce9e51239cd7067dd060ff81" # 6.1.34
-    PKG_SHA256="3acaf74f06c04c5727e8d917251b40e5378303b9e2fc62eca81f362857c1db70"
+    PKG_VERSION="bffce270380803538ef0a791e3d2b8d61fb95e8c" # 5.19.17
+    PKG_SHA256="3832D4114F5EB852F80DE20DB7F02D25935B2C6A113655EC7FD5CA819E054379"
     PKG_URL="https://github.com/raspberrypi/linux/archive/${PKG_VERSION}.tar.gz"
     PKG_SOURCE_NAME="linux-${LINUX}-${PKG_VERSION}.tar.gz"
     ;;
@@ -43,8 +43,8 @@ case "${LINUX}" in
    PKG_PATCH_DIRS="ayn-odin"
    ;;
   *)
-    PKG_VERSION="6.1.38"
-    PKG_SHA256="f9a4f91b609f7d332a5f2be01ab86336fa00149fae6bdc19f16fa19f78802d43"
+    PKG_VERSION="5.10.161"
+    PKG_SHA256="7aaaf6d0bcd8a2cfa14ad75f02ca62bb2de08aad3bee3eff198de49ea5254079"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v5.x/${PKG_NAME}-${PKG_VERSION}.tar.xz"
     PKG_PATCH_DIRS="default ${DISTRO}-default"
     ;;
@@ -433,7 +433,7 @@ make_target() {
       )
     fi
   fi
-
+  
   if [ -n "${KERNEL_UIMAGE_TARGET}" ]; then
     # determine compression used for kernel image
     KERNEL_UIMAGE_COMP=${KERNEL_UIMAGE_TARGET:7}
