@@ -1,5 +1,5 @@
 PKG_NAME="pcsx_rearmed"
-PKG_VERSION="aced3eb3fcaa0fe13c44c4dd196cdab42555fd98"
+PKG_VERSION="febf2246848efb8937ab24c562bba20107bb46f0" #release r25
 PKG_SITE="https://github.com/libretro/pcsx_rearmed"
 PKG_URL="${PKG_SITE}.git"
 PKG_DEPENDS_TARGET="toolchain linux glibc"
@@ -30,7 +30,7 @@ if [ "${ARCH}" = "arm" ]; then
   if [ "${DEVICE}" = "OdroidGoAdvance" ]; then
     sed -e "s|armv8-a|armv8-a+crc|" \
         -i ../Makefile.libretro
-    PKG_MAKE_OPTS_TARGET+=" platfrom=classic_armv8_a35"
+    PKG_MAKE_OPTS_TARGET+=" platform=classic_armv8_a35"
   else
     PKG_MAKE_OPTS_TARGET+=" platform=unix"
   fi

@@ -2,16 +2,17 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="meson"
-PKG_VERSION="0.56.0"
-PKG_SHA256="291dd38ff1cd55fcfca8fc985181dd39be0d3e5826e5f0013bf867be40117213"
+PKG_VERSION="1.3.2"
+PKG_SHA256="492eb450c8b073024276f916f5adbb3c4bb7e90e9e6ec124efda064f3d9b5baa"
 PKG_LICENSE="Apache"
-PKG_SITE="http://mesonbuild.com"
+PKG_SITE="https://mesonbuild.com"
 PKG_URL="https://github.com/mesonbuild/meson/releases/download/${PKG_VERSION}/${PKG_NAME}-${PKG_VERSION}.tar.gz"
-PKG_DEPENDS_HOST="Python3:host setuptools:host pathlib:host"
+PKG_DEPENDS_HOST="Python3:host setuptools:host"
 PKG_LONGDESC="High productivity build system"
 PKG_TOOLCHAIN="manual"
 
-make_host() {
+makeinstall_host() {
+  export DONT_BUILD_LEGACY_PYC=1
   python3 setup.py build
 }
 
