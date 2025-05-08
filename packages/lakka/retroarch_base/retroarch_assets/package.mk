@@ -13,6 +13,7 @@ makeinstall_target() {
 
   # Replace default lakka logo
   cp -Pr "${PKG_DIR}"/lakka.png "${INSTALL}"/usr/share/retroarch/assets/xmb/monochrome/png/lakka.png
+  cp -Pr "${PKG_DIR}"/lakka.png "${INSTALL}"/usr/share/retroarch/assets/xmb/monochrome/png/retroarch.png
 }
 
 post_makeinstall_target() {
