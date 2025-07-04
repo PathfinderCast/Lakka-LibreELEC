@@ -1,15 +1,15 @@
-# SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: GPL-2.0-only
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="ffmpegx"
-PKG_VERSION="4.4"
-PKG_SHA256="06b10a183ce5371f915c6bb15b7b1fffbe046e8275099c96affc29e17645d909"
-PKG_LICENSE="LGPLv2.1+"
+PKG_VERSION="6.0.1"
+PKG_SHA256="9b16b8731d78e596b4be0d720428ca42df642bb2d78342881ff7f5bc29fc9623"
+PKG_LICENSE="GPL-3.0-only"
 PKG_SITE="https://ffmpeg.org"
 PKG_URL="https://ffmpeg.org/releases/ffmpeg-${PKG_VERSION}.tar.xz"
-PKG_DEPENDS_TARGET="toolchain aom bzip2 gnutls lame libvorbis opus x264 zlib"
+PKG_DEPENDS_TARGET="toolchain aom bzip2 openssl lame libvorbis libxml2 opus x264 zlib"
 PKG_LONGDESC="FFmpegx is an complete FFmpeg build to support encoding and decoding."
-PKG_BUILD_FLAGS="-gold -sysroot"
+PKG_BUILD_FLAGS="-sysroot"
 
 # Dependencies
 get_graphicdrivers
@@ -17,7 +17,7 @@ get_graphicdrivers
 if [ "${TARGET_ARCH}" = "x86_64" ]; then
   PKG_DEPENDS_TARGET+=" nasm:host x265"
 
-  if listcontains "${GRAPHIC_DRIVERS}" "(crocus|iris|i915)"; then
+  if listcontains "${GRAPHIC_DRIVERS}" "(crocus|i915|iris)"; then
     PKG_DEPENDS_TARGET+=" intel-vaapi-driver"
   fi
 fi
@@ -64,9 +64,9 @@ pre_configure_target() {
 
     PKG_FFMPEG_X26x_GENERIC="\
     --enable-libx264 \
-    --enable-encoder=x264 \
+    --enable-encoder=libx264 \
     --enable-libx265 \
-    --enable-encoder=x265"
+    --enable-encoder=libx265"
   fi
 
 # Encoders
@@ -123,6 +123,7 @@ configure_target() {
     \
     `#Licensing options` \
     --enable-gpl \
+    --enable-version3 \
     \
     `#Documentation options` \
     --disable-doc \
@@ -133,7 +134,6 @@ configure_target() {
     ${PKG_FFMPEG_ENCODERS} \
     \
     `#General options` \
-    --enable-avresample \
     --disable-lzma \
     --disable-alsa \
     ${PKG_FFMPEG_X11_GRAB} \
@@ -160,8 +160,9 @@ configure_target() {
     --extra-ldflags="${LDFLAGS}" \
     --extra-libs="${PKG_FFMPEG_LIBS}" \
     --enable-pic \
-    --enable-gnutls \
-    --disable-openssl \
+    --disable-gnutls \
+    --enable-openssl \
+    --enable-libxml2 \
     \
     `#Advanced options` \
     --disable-hardcoded-tables \
