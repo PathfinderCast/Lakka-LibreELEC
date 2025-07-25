@@ -159,5 +159,8 @@
   # Space separated list is supported,
     DRIVER_ADDONS="crazycat dvb-latest"
 
+  # additional packages to install:
+    ADDITIONAL_PACKAGES+=" bcm2835-utils dtc"
+
   # debug tty path
     DEBUG_TTY="/dev/console"
