@@ -182,6 +182,7 @@
 
 # List of libretro cores
   LIBRETRO_CORES="\
+                  bluemsx \
                   bnes \
                   bsnes \
                   duckstation \
@@ -221,7 +222,6 @@
 #                 beetle_vb \
 #                 beetle_wswan \
 #                 blastem \
-#                 bluemsx \
 #                 bnes \
 #                 boom3 \
 #                 bsnes \
