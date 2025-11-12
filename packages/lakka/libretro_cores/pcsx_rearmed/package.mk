@@ -1,5 +1,5 @@
 PKG_NAME="pcsx_rearmed"
-PKG_VERSION="6365a756c02d25c76bf90c78e42316b46f876c49" #release r25
+PKG_VERSION="228c14e10e9a8fae0ead8adf30daad2cdd8655b9" #release r25
 PKG_SITE="https://github.com/libretro/pcsx_rearmed"
 PKG_URL="${PKG_SITE}.git"
 PKG_DEPENDS_TARGET="toolchain linux glibc"

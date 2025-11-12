@@ -3,17 +3,17 @@
 
 PKG_NAME="Python3"
 # When changing PKG_VERSION remember to sync PKG_PYTHON_VERSION!
-PKG_VERSION="3.8.9"
-PKG_SHA256="5e391f3ec45da2954419cab0beaefd8be38895ea5ce33577c3ec14940c4b9572"
+PKG_VERSION="3.11.13"
+PKG_SHA256="8fb5f9fbc7609fa822cb31549884575db7fd9657cbffb89510b5d7975963a83a"
 PKG_LICENSE="OSS"
-PKG_SITE="http://www.python.org/"
-PKG_URL="http://www.python.org/ftp/python/${PKG_VERSION}/${PKG_NAME::-1}-${PKG_VERSION}.tar.xz"
-PKG_DEPENDS_HOST="zlib:host bzip2:host libffi:host util-linux:host xz:host"
+PKG_SITE="https://www.python.org/"
+PKG_URL="https://www.python.org/ftp/python/${PKG_VERSION}/${PKG_NAME::-1}-${PKG_VERSION}.tar.xz"
+PKG_DEPENDS_HOST="zlib:host bzip2:host libffi:host util-linux:host xz:host autoconf-archive:host openssl:host"
 PKG_DEPENDS_TARGET="toolchain Python3:host sqlite expat zlib bzip2 xz openssl libffi readline ncurses util-linux"
 PKG_LONGDESC="Python3 is an interpreted object-oriented programming language."
 PKG_TOOLCHAIN="autotools"
 
-PKG_PYTHON_VERSION="python3.8"
+PKG_PYTHON_VERSION="python3.11"
 
 PKG_PY_DISABLED_MODULES="_tkinter nis gdbm bsddb ossaudiodev"
 
@@ -34,7 +34,7 @@ PKG_CONFIGURE_OPTS_HOST="ac_cv_prog_HAS_HG=/bin/false
                          --disable-curses
                          --disable-pydoc
                          --disable-test-modules
-                         --enable-lib2to3
+                         --disable-lib2to3
                          --disable-idle3
                          --without-cxx-main
                          --with-expat=builtin
@@ -42,7 +42,7 @@ PKG_CONFIGURE_OPTS_HOST="ac_cv_prog_HAS_HG=/bin/false
                          --with-doc-strings
                          --with-system-ffi
                          --without-pymalloc
-                         --without-ensurepip
+                         --with-ensurepip=no
 "
 
 PKG_CONFIGURE_OPTS_TARGET="ac_cv_prog_HAS_HG=/bin/false
@@ -72,7 +72,7 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_prog_HAS_HG=/bin/false
                            --enable-curses
                            --disable-pydoc
                            --disable-test-modules
-                           --enable-lib2to3
+                           --disable-lib2to3
                            --disable-idle3
                            --without-cxx-main
                            --with-expat=system
@@ -82,12 +82,17 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_prog_HAS_HG=/bin/false
                            --without-pymalloc
                            --without-ensurepip
                            --enable-ipv6
+                           --with-build-python=${TOOLCHAIN}/bin/python
 "
 
 pre_configure_host() {
   export PYTHON_MODULES_INCLUDE="${HOST_INCDIR}"
   export PYTHON_MODULES_LIB="${HOST_LIBDIR}"
   export DISABLED_EXTENSIONS="readline _curses _curses_panel ${PKG_PY_DISABLED_MODULES}"
+  # control patch Python3-0300-generate-legacy-pyc-bytecode
+  # this needs to be set when building host based py file
+  # do not set this for py compiles being done for target use
+  export DONT_BUILD_LEGACY_PYC=1
 }
 
 post_make_host() {

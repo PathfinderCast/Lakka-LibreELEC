@@ -13,6 +13,7 @@ Here is a list of emulators supported in this build:
 | Emulator            | System                     |
 |---------------------|----------------------------|
 | stella              | Atari 2600/5200            |
+| bluemsx             | Colecovision/MSX           |
 | bnes                | NES                        |
 | fceumm              | NES                        |
 | bsnes               | Super NES                  |
