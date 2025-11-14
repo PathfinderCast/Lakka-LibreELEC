@@ -2,13 +2,16 @@
 
 Lakka is a lightweight Linux distribution that transforms a small computer into a full blown emulation console.
 
-## Why does this for exist?
+An optimized build of Lakka 4.x specifically for the Raspberry Pi 4b. Includes a curated list of emulator cores that have been tested to work well on a Raspberry Pi 4b. In some cases this means running an older build and in others newer builds are used. All cores have been tested to work well on the Raspberry Pi 4b. In some cases multiple cores are provided for the same system which can be used on a per game basis.
 
-Over time the main development team has added/removed emulators and I wanted more control over the emulators I use. In addition I use custom python scripts to control the power button and LEDs as I run this in a a RPi 4 in an original Playstation 1 case. Its a bit of a sleeper system because it looks like a Playstation, but with an RPi 4, it can play way more systems such as Sega CD, Dreamcast, Nintendo 64, Playstation Portable, Nintendo, and Super Nintendo.
+I run this build in an original Playstation 1 case with a Raspberry Pi. The power and reset buttons are wired to the GPIO with python scripts to perform actions for reset, power off, and LED control.
 
-This is a fork of Lakka 4.x however security updates are included such as upgrading to openSSL 3 and also using updated versions of RPi bootloaders. Mesa drivers are also updated.
+## Technical Details
+- Pi Firmware: 2025-03-27
+- Mesa drivers: v24.0.9
+- Python: 3.11
 
-Here is a list of emulators supported in this build:
+## Emulators supported in build:
 
 | Emulator            | System                     |
 |---------------------|----------------------------|
@@ -18,7 +21,7 @@ Here is a list of emulators supported in this build:
 | fceumm              | NES                        |
 | bsnes               | Super NES                  |
 | snes9x              | Super NES                  |
-| genesis_plus_gx     | Sega Genesis               |
+| genesis_plus_gx     | Sega Genesis/Megadrive     |
 | picodrive           | SEGA CD/32x                |
 | pcsx_rearmed        | PSX                        |
 | swanstation         | PSX                        |
@@ -30,11 +33,7 @@ Here is a list of emulators supported in this build:
 
 ## Installation instructions
 
-Installation is the same as the main. Please refer to our website https://www.lakka.tv/get on how to setup Lakka.
+Installation is the same as the main. Please refer to this website https://www.lakka.tv/get on how to setup Lakka.
 
-## Support
+You will need to provide your own bios files to be put in the /system folder and your own game files to put in the /roms folder.
 
-* [FAQ](https://github.com/libretro/Lakka-LibreELEC/wiki/FAQ)
-* #lakkatv on irc.libera.chat
-* [Discord](https://discord.gg/BNFR4hM)
-* [Forums](https://forums.libretro.com/c/libretro/lakka-tv-general)
